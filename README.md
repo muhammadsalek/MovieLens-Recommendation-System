@@ -1,82 +1,121 @@
-MovieLens Recommender System
-📌 Project Overview
+🎬 Movie Recommendation System – MovieLens
+Task Overview
 
-This project implements a movie recommendation system using the MovieLens dataset. Users receive personalized movie suggestions based on their previous ratings. The system applies:
+The goal was to develop a Top-N movie recommendation system using the MovieLens dataset. The system should suggest movies for a given user, using collaborative filtering, matrix factorization, and optionally deep learning-based approaches, and evaluate them with standard metrics.
 
-Collaborative Filtering – Recommendations based on user ratings.
+1️⃣ Approaches Implemented
+a) Collaborative Filtering
 
-Content-Based Filtering – Recommendations based on movie features (e.g., genre, director).
+User-Based CF (UBCF):
 
-Hybrid Approach – Combines collaborative and content-based methods.
+Similar users’ preferences are used to recommend unseen movies.
 
-🧪 Tools and Libraries Used
+Similarity measure: Cosine similarity.
 
-R / RStudio – Primary programming environment
+Number of neighbors: 30.
 
-dplyr / data.table – Data manipulation
+Item-Based CF (IBCF):
 
-recommenderlab / recosystem – Recommender system implementation
+Movies similar to the ones a user liked are recommended.
 
-ggplot2 / plotly – Data visualization
+Similarity measure: Cosine similarity.
 
-shiny / shinyWidgets / shinycssloaders – Interactive web app
+Number of neighbors: 30.
 
-📁 Dataset
+b) Matrix Factorization
 
-The dataset used is MovieLens 1M, containing over 1,000,000 ratings. It is available at GroupLens
-.
+SVD (Singular Value Decomposition)
 
-🚀 Project Structure
-/MovieLens_Recommender
-│
-├── data/                 # Dataset files
-├── R/                    # R scripts
-│   ├── data_preprocessing.R
-│   ├── model_building.R
-│   └── evaluation.R
-├── app/                  # Shiny app files
-│   ├── ui.R
-│   └── server.R
-└── README.md             # This file
+Reduced user-item matrix into latent factors.
 
-🛠️ How to Run
+Trained using recosystem with 20 latent dimensions and 20 iterations.
 
-Install required R packages:
+Can capture complex user-movie interactions.
 
-install.packages(c("dplyr","data.table","recommenderlab","recosystem","ggplot2","plotly","shiny","shinyWidgets","shinycssloaders"))
+c) Optional Enhancement
 
+Neural embeddings / Deep learning (via keras) was prepared for future experimentation, though not fully implemented in this workflow.
 
-Load and preprocess the data:
+2️⃣ Data Preparation
 
-source("R/data_preprocessing.R")
-processed_data <- preprocess_data("data/movielens-1m.csv")
+Removed users with <5 ratings and movies with <10 ratings to reduce sparsity.
 
+Created a realRatingMatrix for collaborative filtering.
 
-Build and train the recommendation model:
+Rating sparsity: ~90.98% (typical for large-scale recommendation datasets).
 
-source("R/model_building.R")
-model <- train_model(processed_data)
+Added timestamp → converted to datetime → analyzed rating trends over years.
 
+3️⃣ Evaluation
 
-Evaluate the model:
+Metrics computed on Top-10 recommendations:
 
-source("R/evaluation.R")
-evaluate_model(model, processed_data)
+Model	Precision	Recall	NDCG
+SVD	0.0502	0.0075	0.0513
+UBCF	0.0547	0.0094	0.0527
+IBCF	0.0600	0.0112	0.0588
 
+Observations:
 
-Launch the Shiny app:
+IBCF slightly outperformed others in all metrics.
 
-shiny::runApp("app/")
+SVD captures latent factors but requires more tuning for better precision.
 
-📄 License
+Overall precision and recall are low due to dataset sparsity; typical for sparse rating matrices.
 
-This project is licensed under the MIT License. See the LICENSE
- file for details.
+Comparison Plot:
 
-📧 Contact
+Saved as model_comparison.png to visualize Precision, Recall, and NDCG across models.
 
-Email: salekml@example.com
+4️⃣ Recommendation Function
 
-GitHub: https://github.com/salekml
+A reusable R function recommend_movies(user_id, N, model_type) was implemented:
 
-LinkedIn: https://www.linkedin.com/in/salekml
+Input:
+
+user_id: integer
+
+N: number of movies to recommend
+
+model_type: "SVD", "UBCF", "IBCF"
+
+Output:
+
+Top-N movie titles for the user.
+
+Example Usage:
+
+recommend_movies(user_id = 5, N = 10, model_type = "SVD")
+recommend_movies(user_id = 5, N = 10, model_type = "UBCF")
+recommend_movies(user_id = 5, N = 10, model_type = "IBCF")
+
+5️⃣ Deployment
+
+Saved all required objects for deployment (.rds files): movies, filtered ratings, rating matrix, models (SVD, UBCF, IBCF), Top-N SVD predictions.
+
+Deployed the model to Hugging Face:
+MovieLens_App1
+
+6️⃣ Findings / Recommendations
+
+Best Approach: IBCF showed slightly better performance than UBCF and SVD in this dataset.
+
+SVD Considerations: With hyperparameter tuning (dimensionality, iterations, learning rate), SVD could outperform CF methods.
+
+Sparse Datasets: Precision/Recall is naturally low; filtering for frequent users and movies improves performance.
+
+Future Enhancements:
+
+Neural embeddings with Keras.
+
+Hybrid model combining CF + content-based features.
+
+Context-aware recommendations using timestamps, genres, or user demographics.
+
+7️⃣ Deliverables Summary
+Deliverable	Status
+Clean & documented R code	✅ Completed
+Top-N recommendation function	✅ Implemented
+Evaluation metrics (Precision, Recall, NDCG)	✅ Computed
+Visualizations (ratings distribution, users, movies, metrics)	✅ Completed
+Model deployment (Hugging Face)	✅ Completed
