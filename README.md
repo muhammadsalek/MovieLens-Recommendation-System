@@ -1,52 +1,52 @@
-🎬 Movie Recommendation System – MovieLens
-Task Overview
+👉 Download MovieLens 100K Dataset (ml-100k.zip)
 
-The goal was to develop a Top-N movie recommendation system using the MovieLens dataset. The system should suggest movies for a given user, using collaborative filtering, matrix factorization, and optionally deep learning-based approaches, and evaluate them with standard metrics.
+This dataset contains 100,000 ratings from 943 users on 1,682 movies. It's widely used for building and evaluating recommender systems.
 
-1️⃣ Approaches Implemented
+📄 Final README for MovieLens 100K Recommendation System
+Project Overview
+
+This project implements a Top-N movie recommendation system using the MovieLens 100K dataset. The system employs collaborative filtering, matrix factorization, and evaluates models using standard metrics like Precision, Recall, and NDCG.
+
+🧠 Approaches Implemented
 a) Collaborative Filtering
 
-User-Based CF (UBCF):
+User-Based CF (UBCF): Recommends movies based on similar users' preferences.
 
-Similar users’ preferences are used to recommend unseen movies.
+Similarity Measure: Cosine similarity.
 
-Similarity measure: Cosine similarity.
+Number of Neighbors: 30.
 
-Number of neighbors: 30.
+Item-Based CF (IBCF): Recommends movies similar to those a user liked.
 
-Item-Based CF (IBCF):
+Similarity Measure: Cosine similarity.
 
-Movies similar to the ones a user liked are recommended.
-
-Similarity measure: Cosine similarity.
-
-Number of neighbors: 30.
+Number of Neighbors: 30.
 
 b) Matrix Factorization
 
-SVD (Singular Value Decomposition)
+SVD (Singular Value Decomposition): Decomposes the user-item matrix into latent factors.
 
-Reduced user-item matrix into latent factors.
+Latent Dimensions: 20.
 
-Trained using recosystem with 20 latent dimensions and 20 iterations.
+Iterations: 20.
 
-Can capture complex user-movie interactions.
+Trained using the recosystem package.
 
 c) Optional Enhancement
 
-Neural embeddings / Deep learning (via keras) was prepared for future experimentation, though not fully implemented in this workflow.
+Neural Embeddings / Deep Learning: Prepared for future experimentation using Keras.
 
-2️⃣ Data Preparation
+📊 Data Preparation
 
-Removed users with <5 ratings and movies with <10 ratings to reduce sparsity.
+Removed users with fewer than 5 ratings and movies with fewer than 10 ratings to reduce sparsity.
 
 Created a realRatingMatrix for collaborative filtering.
 
-Rating sparsity: ~90.98% (typical for large-scale recommendation datasets).
+Rating sparsity: ~90.98%.
 
-Added timestamp → converted to datetime → analyzed rating trends over years.
+Converted timestamps to datetime and analyzed rating trends over the years.
 
-3️⃣ Evaluation
+📈 Evaluation Metrics
 
 Metrics computed on Top-10 recommendations:
 
@@ -63,19 +63,15 @@ SVD captures latent factors but requires more tuning for better precision.
 
 Overall precision and recall are low due to dataset sparsity; typical for sparse rating matrices.
 
-Comparison Plot:
-
-Saved as model_comparison.png to visualize Precision, Recall, and NDCG across models.
-
-4️⃣ Recommendation Function
+🎬 Recommendation Function
 
 A reusable R function recommend_movies(user_id, N, model_type) was implemented:
 
 Input:
 
-user_id: integer
+user_id: Integer
 
-N: number of movies to recommend
+N: Number of movies to recommend
 
 model_type: "SVD", "UBCF", "IBCF"
 
@@ -89,14 +85,13 @@ recommend_movies(user_id = 5, N = 10, model_type = "SVD")
 recommend_movies(user_id = 5, N = 10, model_type = "UBCF")
 recommend_movies(user_id = 5, N = 10, model_type = "IBCF")
 
-5️⃣ Deployment
+🚀 Deployment
 
 Saved all required objects for deployment (.rds files): movies, filtered ratings, rating matrix, models (SVD, UBCF, IBCF), Top-N SVD predictions.
 
-Deployed the model to Hugging Face:
-MovieLens_App1
+Deployed the model to Hugging Face: MovieLens_App1
 
-6️⃣ Findings / Recommendations
+🔍 Findings & Recommendations
 
 Best Approach: IBCF showed slightly better performance than UBCF and SVD in this dataset.
 
@@ -112,10 +107,14 @@ Hybrid model combining CF + content-based features.
 
 Context-aware recommendations using timestamps, genres, or user demographics.
 
-7️⃣ Deliverables Summary
+📂 Deliverables Summary
 Deliverable	Status
 Clean & documented R code	✅ Completed
 Top-N recommendation function	✅ Implemented
 Evaluation metrics (Precision, Recall, NDCG)	✅ Computed
 Visualizations (ratings distribution, users, movies, metrics)	✅ Completed
 Model deployment (Hugging Face)	✅ Completed
+
+For more information and to access the dataset, visit the official GroupLens MovieLens 100K page:
+
+👉 GroupLens MovieLens 100K Dataset
